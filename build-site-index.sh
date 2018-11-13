@@ -75,9 +75,12 @@ cat ~/activeusers.appended.txt >> /var/www/html/index.html
 # For some reason, when I create the ftp accounts, the user directory
 # has the wrong permissions to be viewed from a web browser.
 # This is basically a standard Unix perms reset that respects the
-# difference between files and folders.
+# difference between files and folders. Files without read permission
+# for 'other' will continue to withhold read permissions.
 sudo find /var/www/ -type d -exec chmod 755 {} \;
-sudo find /var/www/ -type f -exec chmod 644 {} \;
+sudo find /var/www/ -type f -perm -o+r -exec chmod 644 {} \;
+sudo find /var/www/ -type f ! -perm -o+r -exec chmod 600 {} \;
+
 
 echo '</p>' >> /var/www/html/index.html
 echo '</div>' >> /var/www/html/index.html
